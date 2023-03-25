@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Chat Room</h1>
+
+  <div id="app">
+    <div v-for="message in messages" :key="message.id">
+      <p><strong>{{ message.user.username }}</strong>: {{ message.text }}</p>
+    </div>
+
+    <form v-on:submit.prevent="sendMessage">
+      <input v-model="newMessage" type="text" placeholder="Type your message here">
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  {% load static %}
+  <script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

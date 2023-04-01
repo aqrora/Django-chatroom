@@ -3,19 +3,20 @@
 
 {% block content %}
 <div id="overlay">
-<div id="popup-container">
-    <div id="popup">
-      <h2>Welcome to our website</h2>
-      <p>Please enter your username or log in anonymously.</p>
-      <form id="username-form">
-        <div class="input-container">
-            <i class="fa fa-user icon"></i>
-            <input class="input-field" type="text" placeholder="Enter your username" name="username">
-          </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    <button id="anonymous-button" class="btn btn-secondary">Log in anonymously</button>
+    <div id="popup-container">
+        <div id="popup">
+        <h2>Welcome to our website</h2>
+        <p>Please enter your username or log in anonymously.</p>
+        <form id="username-form">
+            <div class="input-container">
+                <i class="fa fa-user icon"></i>
+                {% csrf_token %}
+                <input class="input-field" type="text" placeholder="Enter your username" id="username">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        <button id="anonymous-button" class="btn btn-secondary">Log in anonymously</button>
+        </div>
     </div>
-</div>
 </div>
 {% endblock %}

@@ -1,20 +1,65 @@
 {% extends 'base.html' %}
 
+
+
 {% block content %}
-  <h1>Chat Room</h1>
 
-  <div id="app">
-    <div v-for="message in messages" :key="message.id">
-      <p><strong>{{ message.user.username }}</strong>: {{ message.text }}</p>
+
+<div id="app">
+  {% if show_popup %}
+    {% include 'popup.html' %}
+    <script>
+      $(document).ready(function() {
+        $("#overlay").show();
+        $("#popup-container").show();
+
+        // Submit the form
+        $("#username-form").submit(function(e) {
+          e.preventDefault();
+          var username = $("#username").val();
+          if (username) {
+            // Set the username in the local storage
+            localStorage.setItem("username", username);
+            // Reload the page to update the username in the header
+            location.reload();
+          } else {
+            alert("Please enter a username.");
+          }
+        });
+
+        // Log in anonymously
+        $("#anonymous-button").click(function() {
+          // Remove the username from the local storage
+          localStorage.removeItem("username");
+          // Reload the page to update the header
+          location.reload();
+        });
+      });
+  </script>
+        {% endif %}
+  <div class="chat-header">
+    <h1>Chat Room</h1>
+  </div>
+  <div class="chat-box">
+    <div class="message">
+      {% for message in messages %}
+          <div class="message-author">
+            {{ message.by_user.username }}
+          </div>
+          <div class="message-text">
+            {{ message.text }}
+          </div>
+      {% endfor %}
     </div>
-
-    <form v-on:submit.prevent="sendMessage">
-      <input v-model="newMessage" type="text" placeholder="Type your message here">
+  </div>
+  <div class="chat-input">
+    <form method="POST" action="{% url 'chat:submit_message' %}">
+      {% csrf_token %}
+      <input type="text" name="message_text" placeholder="Type your message here">
       <button type="submit">Send</button>
     </form>
   </div>
+</div>
+  
 
-  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-  {% load static %}
-  <script src="{% static 'js/main.js' %}"></script>
 {% endblock %}

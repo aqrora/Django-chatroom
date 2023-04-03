@@ -8,4 +8,4 @@ ___
 - Messages are stored in a database and users can edit their own messages
 - Basic formatting is available, such as bold and italic text
 - Users can react to messages with likes
-- Rate limiting is implemented to prevent spamming
+- - Rate limiting is implemented to prevent spamming

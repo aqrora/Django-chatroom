@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
     id = models.IntegerField(primary_key=True)
     username = models.CharField(max_length=32)
+    
     groups = models.ManyToManyField(
         'auth.Group',
         related_name='auth_users',
@@ -18,6 +19,6 @@ class User(AbstractUser):
 
 class Message(models.Model):
     text = models.CharField(max_length=255)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User, to_field='id', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now=True)
+    

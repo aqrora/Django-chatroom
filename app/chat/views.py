@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib import auth, messages
 from django.http import JsonResponse, HttpResponseBadRequest
 from .models import Message, User
-from .lib import verify_jwt_token, generate_jwt_token
+from .lib import verify_jwt_token, generate_jwt_token, generate_random_color
 
 
 
@@ -28,6 +28,7 @@ def requires_auth(view_func):
 
 def chat_room(request):
     messages = Message.objects.all()
+    
     jwt_token = request.COOKIES.get('jwt_token')
     show_popup = True
     if jwt_token is not None and verify_jwt_token(jwt_token) is not None:
@@ -47,7 +48,7 @@ def login(request):
         username = request.POST['username']
         
         # create user object
-        user = User(username=username)
+        user = User(username=username, color = generate_random_color())
         user.save()
         # refresh fields
         

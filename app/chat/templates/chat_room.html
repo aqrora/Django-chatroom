@@ -58,8 +58,8 @@
   <div class="chat-box">
     <div class="message">
       {% for message in messages %}
-          <div class="message-author">
-            {{ message.by_user.username }}
+          <div class="message-author" style="color:{{ message.user.color }}">
+            {{ message.user.username }}:
           </div>
           <div class="message-text">
             {{ message.text }}

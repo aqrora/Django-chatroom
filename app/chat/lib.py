@@ -1,4 +1,4 @@
-import jwt
+import jwt, random
 from django.conf import settings
 from datetime import datetime, timedelta
 from . import base
@@ -6,6 +6,15 @@ from . import base
 class Struct:
     def __init__(self, **entries):
         self.__dict__.update(entries)
+
+
+def generate_random_color():
+    r = random.randint(0, 255)
+    g = random.randint(0, 255)
+    b = random.randint(0, 255)
+    return '#{0:02x}{1:02x}{2:02x}'.format(r, g, b)
+
+
 
 def generate_jwt_token(data):
     

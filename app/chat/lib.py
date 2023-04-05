@@ -10,10 +10,10 @@ class Struct:
 def generate_jwt_token(data):
     
     # Set the token payload (e.g. user ID and username)
-    payload = {'user_id': 123, 'username': 'johndoe'}
+    
 
     # Generate the token
-    token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+    token = jwt.encode(data, settings.SECRET_KEY, algorithm='HS256')
 
     return token
 
@@ -23,7 +23,7 @@ def verify_jwt_token(token):
 
         decoded_payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
         user = base.find_user_by_id(decoded_payload['user_id'])
-
+        
         return user
     except jwt.exceptions.DecodeError:
         return None

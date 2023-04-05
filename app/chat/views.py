@@ -12,11 +12,12 @@ def requires_auth(view_func):
     def wrapper(request, *args, **kwargs):
         jwt_token = request.COOKIES.get('jwt_token')
         if not jwt_token:
-            return HttpResponseBadRequest()
+            print("No jwt token")
+            return HttpResponseBadRequest(status=403)
 
         current_user = verify_jwt_token(jwt_token)
         if current_user is None:
-            return HttpResponseBadRequest()
+            return HttpResponseBadRequest(status=403)
 
         return view_func(request, current_user, *args, **kwargs)
 
@@ -32,8 +33,8 @@ def chat_room(request):
     messages = Message.objects.all()
     jwt_token = request.COOKIES.get('jwt_token')
     show_popup = True
-    if jwt_token is not None and verify_jwt_token(jwt_token) is not None:
-        show_popup = False
+    # if jwt_token is not None and verify_jwt_token(jwt_token) is not None:
+    #     show_popup = False
 
     context = {
         'show_popup': show_popup,  # Set this to True to show the popup
@@ -46,20 +47,24 @@ def chat_room(request):
 def login(request):
     if request.method == 'POST':
         # get user info from form
-        
         username = request.POST['username']
+        
         # create user object
         user = User(username=username)
         user.save()
+        # refresh fields
         
+        print(user.__dict__)
         data = {
             "user_id": user.id,
             "username": user.username
         }
+        # generate jwt token
         token = generate_jwt_token(data)
 
         # Return token in json
         return JsonResponse({"token":token})
+    
     return HttpResponseBadRequest()
 
 

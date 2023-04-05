@@ -1,8 +1,8 @@
-from django.contrib.auth.models import User
+from .models import User
 
 def find_user_by_id(user_id):
-    try:
-        user = User.objects.get(id=user_id)
-        return user
-    except User.DoesNotExist:
-        return None
+    print(user_id)
+    users = User.objects.all()
+    print(users)
+    user = User.objects.get(id=user_id)
+    return user

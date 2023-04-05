@@ -12,7 +12,6 @@ def requires_auth(view_func):
     def wrapper(request, *args, **kwargs):
         jwt_token = request.COOKIES.get('jwt_token')
         if not jwt_token:
-            print("No jwt token")
             return HttpResponseBadRequest(status=403)
 
         current_user = verify_jwt_token(jwt_token)
@@ -27,14 +26,12 @@ def requires_auth(view_func):
 
 
 
-
-# @login_required
 def chat_room(request):
     messages = Message.objects.all()
     jwt_token = request.COOKIES.get('jwt_token')
     show_popup = True
-    # if jwt_token is not None and verify_jwt_token(jwt_token) is not None:
-    #     show_popup = False
+    if jwt_token is not None and verify_jwt_token(jwt_token) is not None:
+        show_popup = False
 
     context = {
         'show_popup': show_popup,  # Set this to True to show the popup
@@ -54,7 +51,6 @@ def login(request):
         user.save()
         # refresh fields
         
-        print(user.__dict__)
         data = {
             "user_id": user.id,
             "username": user.username
@@ -75,7 +71,7 @@ def submit_message(request, current_user):
         message_text = request.POST.get('message_text')
         message = Message(text=message_text, user=current_user)
         message.save()
-
+        # TODO WEBSOCKET LOGINCS
         return HttpResponseRedirect('/')
     else:
         return HttpResponseBadRequest()

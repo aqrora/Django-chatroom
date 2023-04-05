@@ -6,6 +6,27 @@ from .models import Message, User
 from .lib import verify_jwt_token, generate_jwt_token
 
 
+
+
+def requires_auth(view_func):
+    def wrapper(request, *args, **kwargs):
+        jwt_token = request.COOKIES.get('jwt_token')
+        if not jwt_token:
+            return HttpResponseBadRequest()
+
+        current_user = verify_jwt_token(jwt_token)
+        if current_user is None:
+            return HttpResponseBadRequest()
+
+        return view_func(request, current_user, *args, **kwargs)
+
+    return wrapper
+
+
+
+
+
+
 # @login_required
 def chat_room(request):
     messages = Message.objects.all()
@@ -21,21 +42,6 @@ def chat_room(request):
     return render(request, 'chat_room.html', context)
 
 
-def submit_message(request):
-    if request.method == 'POST':
-        jwt_token = request.COOKIES.get('jwt_token')
-
-        if not jwt_token: current_user = 0
-        else: current_user = verify_jwt_token(jwt_token)[0]
-
-        message_text = request.POST.get('message_text')
-        message = Message(text=message_text, user=current_user)
-        message.save()
-
-        return HttpResponseRedirect('/')
-    else:
-        return HttpResponseBadRequest()
-    
 
 def login(request):
     if request.method == 'POST':
@@ -51,6 +57,21 @@ def login(request):
             "username": user.username
         }
         token = generate_jwt_token(data)
+
         # Return token in json
         return JsonResponse({"token":token})
     return HttpResponseBadRequest()
+
+
+@requires_auth
+def submit_message(request, current_user):
+    if request.method == 'POST':
+
+        message_text = request.POST.get('message_text')
+        message = Message(text=message_text, user=current_user)
+        message.save()
+
+        return HttpResponseRedirect('/')
+    else:
+        return HttpResponseBadRequest()
+    

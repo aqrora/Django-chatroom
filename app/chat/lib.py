@@ -1,6 +1,11 @@
 import jwt
 from django.conf import settings
 from datetime import datetime, timedelta
+from . import base
+
+class Struct:
+    def __init__(self, **entries):
+        self.__dict__.update(entries)
 
 def generate_jwt_token(data):
     
@@ -15,9 +20,10 @@ def generate_jwt_token(data):
 
 def verify_jwt_token(token):
     try:
+
         decoded_payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
-        user_id = decoded_payload['user_id']
-        username = decoded_payload['username']
-        return user_id, username
+        user = base.find_user_by_id(decoded_payload['user_id'])
+
+        return user
     except jwt.exceptions.DecodeError:
-        return 0, None
+        return None

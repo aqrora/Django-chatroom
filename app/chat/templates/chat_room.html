@@ -6,7 +6,7 @@
 
 
 <div id="app">
-  {% if show_popup %}
+  {% if not current_user %}
     {% include 'popup.html' %}
     <script>
     showPopup();  
@@ -24,7 +24,13 @@
         </div>
         {% endifchanged %}
         <div class="message-text">
-        {{ message.text }}
+          {{ message.text }}
+        {% if current_user == message.user %}
+          <div class="editsign">
+            edit message
+          </div>
+        {% endif %}
+        <span class="sent">{{ message.created_at }}</span>
         </div>
     </div>
     {% endfor %}
@@ -36,7 +42,7 @@
     <form method="POST" action="{% url 'chat:submit_message' %}" id="message-form">
       {% csrf_token %}
       <input class="input-form" type="text" name="message_text" autocomplete="off" maxlength="255" placeholder="Type your message here">
-      <button type="submit">Send</button>
+      <button class="submit-message" type="submit">Send</button>
     </form>
   </div>
   <script>

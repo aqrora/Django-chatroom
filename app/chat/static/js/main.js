@@ -61,15 +61,15 @@ function scrollToBottom() {
   
 $(document).ready(function() {
     var $inputField = $('input[name="message_text"]');
-    var $submitButton = $('button[type="submit"]');
-    $submitButton.hide();
+    var submitButton = $('.submit-message');
+    submitButton.hide();
 
     $inputField.on('input', function() {
         var inputValue = $(this).val();
         if (inputValue.trim().length > 0) {
-        $submitButton.show();
+        submitButton.show();
         } else {
-        $submitButton.hide();
+        submitButton.hide();
         }
     });
 

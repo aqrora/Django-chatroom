@@ -31,14 +31,13 @@ def chat_room(request):
     
 
 
-    jwt_token = request.COOKIES.get('jwt_token')
-    show_popup = True
-    if jwt_token is not None and verify_jwt_token(jwt_token) is not None:
-        show_popup = False
+    jwt_token = request.COOKIES.get('jwt_token', None)
+    if jwt_token is None: current_user = None    
+    else: current_user = verify_jwt_token(jwt_token)
 
     context = {
-        'show_popup': show_popup,  # Set this to True to show the popup
-        'messages': messages # Set array of messages to display
+        'messages': messages, # Set array of messages to display
+        'current_user': current_user
     }
     return render(request, 'chat_room.html', context)
 

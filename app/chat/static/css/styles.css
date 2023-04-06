@@ -45,16 +45,27 @@ body {
 }
 
 .message-text {
+  position: relative;
   font-size: 14px;
   padding: 10px;
   background-color: #286C94;
   color: #fff;
   border-radius: 10px;
   word-wrap: break-word; /* добавляем свойство для переноса слов */
-  min-width: 40%; /* задаем минимальную ширину */
-  max-width: 80%; /* задаем максимальную ширину */
-  white-space: nowrap; /* текст не переносится */
-  text-overflow: ellipsis; /* текст обрезается */
+  
+}
+
+.sent {
+  display: none;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.message-text:hover .sent {
+  display: block;
 }
 
 
@@ -114,6 +125,8 @@ body {
   overflow: hidden;
 }
 
+
+
 #popup-container {
   position: fixed;
   top: 50%;
@@ -169,6 +182,8 @@ body {
   color: gray;
   font-style: italic;
 }
+
+
 #anonymous-button {
   margin-top: 20px;
 }

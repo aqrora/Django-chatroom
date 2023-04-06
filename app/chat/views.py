@@ -4,7 +4,7 @@ from django.contrib import auth, messages
 from django.http import JsonResponse, HttpResponseBadRequest
 from .models import Message, User
 from .lib import verify_jwt_token, generate_jwt_token, generate_random_color
-
+from .forms import *
 
 
 
@@ -44,37 +44,46 @@ def chat_room(request):
 
 def login(request):
     if request.method == 'POST':
-        # get user info from form
-        username = request.POST['username']
-        
-        # create user object
-        user = User(username=username, color = generate_random_color())
-        user.save()
-        # refresh fields
-        
-        data = {
-            "user_id": user.id,
-            "username": user.username
-        }
-        # generate jwt token
-        token = generate_jwt_token(data)
 
-        # Return token in json
-        return JsonResponse({"token":token})
-    
+        form = UserForm(request.POST)
+        if form.is_valid():
+            # get user info from form
+            username = request.POST['username']
+        
+            # create user object
+            user = User(username=username, color = generate_random_color())
+            user.save()
+            # refresh fields
+        
+            data = {
+                "user_id": user.id,
+                "username": user.username
+            }
+            # generate jwt token
+            token = generate_jwt_token(data)
+
+            # Return token in json
+            return JsonResponse({"token":token})
+        else:
+            errors = form.errors.as_json()
+            return JsonResponse({'errors': errors})
+        
     return HttpResponseBadRequest()
 
 
 @requires_auth
 def submit_message(request, current_user):
     if request.method == 'POST':
-
-        message_text = request.POST.get('message_text')
-        message = Message(text=message_text, user=current_user)
-        message.save()
-        # TODO WEBSOCKET LOGINCS
-        # TODO validation
-        return HttpResponseRedirect('/')
+        form = MessageForm(request.POST)
+        if form.is_valid():
+            message_text = form.cleaned_data['message_text']
+            message = Message(text=message_text, user=current_user)
+            message.save()
+            # TODO WEBSOCKET LOGINCS
+            return HttpResponseRedirect('/')
+        else:
+            errors = form.errors.as_json()
+            return JsonResponse({'errors': errors})
     else:
-        return HttpResponseBadRequest()
+        return HttpResponseBadRequest(form)
     

@@ -11,7 +11,7 @@
             <div class="input-container">
                 <i class="fa fa-user icon"></i>
                 {% csrf_token %}
-                <input class="input-field" type="text" placeholder="Enter your username" id="username">
+                <input class="input-field" type="text" maxlength="32" placeholder="Enter your username" id="username">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
         </form>

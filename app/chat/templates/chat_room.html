@@ -70,7 +70,7 @@
   <div class="chat-input">
     <form method="POST" action="{% url 'chat:submit_message' %}">
       {% csrf_token %}
-      <input type="text" name="message_text" autocomplete="off" placeholder="Type your message here">
+      <input class="input-form" type="text" name="message_text" autocomplete="off" maxlength="255" placeholder="Type your message here">
       <button type="submit">Send</button>
     </form>
   </div>
@@ -80,6 +80,22 @@
       chatBox.scrollTop(chatBox[0].scrollHeight);
     }
     scrollToBottom();
+    var $submitButton = $('button[type="submit"]');
+    $submitButton.hide();
+    
+    $(document).ready(function() {
+      var $inputField = $('input[name="message_text"]');
+
+      $inputField.on('input', function() {
+        var inputValue = $(this).val();
+        if (inputValue.trim().length > 0) {
+          $submitButton.show();
+        } else {
+          $submitButton.hide();
+        }
+      });
+    });
+
   </script>
 </div>
   

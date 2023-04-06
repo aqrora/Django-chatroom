@@ -86,6 +86,7 @@ $(document).ready(function() {
           success: function(response) {
             if (response.success && response.success === true) {
                 console.log("Message sent")
+                $inputField.val("");
               } else {
                 alert(response.errors);
                 // обрабатываем ошибку

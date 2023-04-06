@@ -73,6 +73,7 @@ def submit_message(request, current_user):
         message = Message(text=message_text, user=current_user)
         message.save()
         # TODO WEBSOCKET LOGINCS
+        # TODO validation
         return HttpResponseRedirect('/')
     else:
         return HttpResponseBadRequest()

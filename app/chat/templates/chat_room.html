@@ -56,24 +56,31 @@
     <h1>Chat Room</h1>
   </div>
   <div class="chat-box">
-    <div class="message">
-      {% for message in messages %}
+    {% for message in messages %}
+      <div class="message">
           <div class="message-author" style="color:{{ message.user.color }}">
             {{ message.user.username }}:
           </div>
           <div class="message-text">
             {{ message.text }}
           </div>
+        </div>
       {% endfor %}
-    </div>
   </div>
   <div class="chat-input">
     <form method="POST" action="{% url 'chat:submit_message' %}">
       {% csrf_token %}
-      <input type="text" name="message_text" placeholder="Type your message here">
+      <input type="text" name="message_text" autocomplete="off" placeholder="Type your message here">
       <button type="submit">Send</button>
     </form>
   </div>
+  <script>
+    function scrollToBottom() {
+      var chatBox = $('.chat-box');
+      chatBox.scrollTop(chatBox[0].scrollHeight);
+    }
+    scrollToBottom();
+  </script>
 </div>
   
 

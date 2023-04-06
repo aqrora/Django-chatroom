@@ -9,93 +9,38 @@
   {% if show_popup %}
     {% include 'popup.html' %}
     <script>
-      function sendLogin(username) {
-        console.log(username);
-        $.ajax({
-          url: "/login",
-          method: "POST",
-          data: {
-            username: username,
-            csrfmiddlewaretoken: $('input[name="csrfmiddlewaretoken"]').val() // include the CSRF token
-          },
-          success: function(response) {
-            // Set the JWT token in a cookie
-            document.cookie = "jwt_token=" + response.token;
-            $("#overlay").hide();
-            $("#popup-container").hide();
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-            alert("An error occurred: " + errorThrown);
-          }
-        });
-      }
-
-      $(document).ready(function() {
-        $("#overlay").show();
-        $("#popup-container").show();
-
-        // Submit the form
-        $("#username-form").submit(function(e) {
-          e.preventDefault();
-          var username = $("#username").val();
-          if (username) {
-            sendLogin(username);
-          } else {
-            alert("Please enter a username.");
-          }
-        });
-        
-        // Log in anonymously
-        $("#anonymous-button").click(function() {
-          sendLogin("Anonymous");
-        });
-      });
-  </script>
+    showPopup();  
+    </script>
         {% endif %}
   <div class="chat-header">
     <h1>Chat Room</h1>
   </div>
   <div class="chat-box">
     {% for message in messages %}
-      <div class="message">
-          <div class="message-author" style="color:{{ message.user.color }}">
-            {{ message.user.username }}:
-          </div>
-          <div class="message-text">
-            {{ message.text }}
-          </div>
+    <div class="message">
+        {% ifchanged message.user %}
+        <div class="message-author" style="color:{{ message.user.color }}">
+          {{ message.user.username }}:
         </div>
-      {% endfor %}
+        {% endifchanged %}
+        <div class="message-text">
+        {{ message.text }}
+        </div>
+    </div>
+    {% endfor %}
+    
+
+
   </div>
   <div class="chat-input">
-    <form method="POST" action="{% url 'chat:submit_message' %}">
+    <form method="POST" action="{% url 'chat:submit_message' %}" id="message-form">
       {% csrf_token %}
       <input class="input-form" type="text" name="message_text" autocomplete="off" maxlength="255" placeholder="Type your message here">
       <button type="submit">Send</button>
     </form>
   </div>
   <script>
-    function scrollToBottom() {
-      var chatBox = $('.chat-box');
-      chatBox.scrollTop(chatBox[0].scrollHeight);
-    }
     scrollToBottom();
-    var $submitButton = $('button[type="submit"]');
-    $submitButton.hide();
-    
-    $(document).ready(function() {
-      var $inputField = $('input[name="message_text"]');
-
-      $inputField.on('input', function() {
-        var inputValue = $(this).val();
-        if (inputValue.trim().length > 0) {
-          $submitButton.show();
-        } else {
-          $submitButton.hide();
-        }
-      });
-    });
-
   </script>
 </div>
   

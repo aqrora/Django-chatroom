@@ -29,6 +29,8 @@ def requires_auth(view_func):
 def chat_room(request):
     messages = Message.objects.all()
     
+
+
     jwt_token = request.COOKIES.get('jwt_token')
     show_popup = True
     if jwt_token is not None and verify_jwt_token(jwt_token) is not None:
@@ -48,7 +50,7 @@ def login(request):
         form = UserForm(request.POST)
         if form.is_valid():
             # get user info from form
-            username = request.POST['username']
+            username = form.cleaned_data['username']
         
             # create user object
             user = User(username=username, color = generate_random_color())
@@ -71,6 +73,9 @@ def login(request):
     return HttpResponseBadRequest()
 
 
+
+
+
 @requires_auth
 def submit_message(request, current_user):
     if request.method == 'POST':
@@ -80,10 +85,10 @@ def submit_message(request, current_user):
             message = Message(text=message_text, user=current_user)
             message.save()
             # TODO WEBSOCKET LOGINCS
-            return HttpResponseRedirect('/')
+            return JsonResponse({'success': True})
         else:
             errors = form.errors.as_json()
             return JsonResponse({'errors': errors})
     else:
-        return HttpResponseBadRequest(form)
+        return HttpResponseBadRequest()
     

@@ -51,6 +51,10 @@ body {
   color: #fff;
   border-radius: 10px;
   word-wrap: break-word; /* добавляем свойство для переноса слов */
+  min-width: 40%; /* задаем минимальную ширину */
+  max-width: 80%; /* задаем максимальную ширину */
+  white-space: nowrap; /* текст не переносится */
+  text-overflow: ellipsis; /* текст обрезается */
 }
 
 

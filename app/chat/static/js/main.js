@@ -1,13 +1,5 @@
 
 
-
-
-
-
-
-
-
-
 function sendLogin(username) {
     console.log("sending login")
     $.ajax({

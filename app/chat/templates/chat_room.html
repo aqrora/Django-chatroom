@@ -27,7 +27,7 @@
           {{ message.text }}
         {% if current_user == message.user %}
           <div class="editsign">
-            edit message
+            <!-- edit message -->
           </div>
         {% endif %}
         <span class="sent">{{ message.created_at }}</span>
@@ -39,7 +39,7 @@
 
   </div>
   <div class="chat-input">
-    <form method="POST" action="{% url 'chat:submit_message' %}" id="message-form">
+    <form method="POST" id="message-form">
       {% csrf_token %}
       <input class="input-form" type="text" name="message_text" autocomplete="off" maxlength="255" placeholder="Type your message here">
       <button class="submit-message" type="submit">Send</button>

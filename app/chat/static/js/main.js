@@ -31,11 +31,11 @@ function showPopup() {
     $("#username-form").submit(function(e) {
         e.preventDefault();
         var username = $("#username").val();
-    if (username) {
-    sendLogin(username);
-    } else {
-    alert("Please enter a username.");
-    }
+      if (username) {
+      sendLogin(username);
+      } else {
+      alert("Please enter a username.");
+      }
     });
     
     // Log in anonymously
@@ -56,40 +56,47 @@ $(document).ready(function() {
     var submitButton = $('.submit-message');
     submitButton.hide();
 
-    $inputField.on('input', function() {
+    $inputField.on('input', checkInputField);
+
+    function checkInputField() {
         var inputValue = $(this).val();
         if (inputValue.trim().length > 0) {
         submitButton.show();
         } else {
         submitButton.hide();
         }
-    });
+    }
 
-    $('#message-form').submit(function(event) {
-        event.preventDefault(); // отменяем стандартное поведение формы
-    
-        var formData = $(this).serialize(); // получаем данные формы в виде строки
-    
-        $.ajax({
+    $('#message-form').off('submit').submit(function(event) {
+      event.preventDefault();
+      var $form = $(this);
+      var $submitButton = $form.find('button[type="submit"]');
+      $submitButton.prop('disabled', true); // отключаем кнопку отправки формы
+  
+      var formData = $form.serialize();
+      $.ajax({
           url: "/submit_message",
           type: "POST",
           data: formData,
-          dataType: 'json', // указываем, что ждем ответ в формате JSON
+          dataType: 'json',
           success: function(response) {
-            if (response.success && response.success === true) {
-                console.log("Message sent")
-                $inputField.val("");
-              } else {
-                alert(response.errors);
-                // обрабатываем ошибку
-              }
-          },
-          error: function(response) {
-            // обрабатываем ошибку
-            console.log(response);
-          }
+              if (response.success && response.success === true) {
+                  console.log("Message sent")
+                  $inputField.val(""); // устанавливаем пустое значение в поле ввода
+                  submitButton.hide(); // скрываем кнопку
+                } else {
+                  alert(response.errors);
+                }
+              },
+            error: function(response) {
+              console.log(response);
+            },
+            complete: function() {
+              $submitButton.prop('disabled', false); // включаем кнопку отправки формы после получения ответа
+            }
+
+          });
         });
-    });
 
 
 });

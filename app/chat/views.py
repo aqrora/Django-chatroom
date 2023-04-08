@@ -42,6 +42,9 @@ def chat_room(request):
     return render(request, 'chat_room.html', context)
 
 
+def test_socket(request):
+    return render(request, 'test_socket.html')
+
 
 def login(request):
     if request.method == 'POST':

@@ -70,8 +70,6 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'app.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -86,7 +84,7 @@ DATABASES = {
 
 # ASGI-protocol settings
 ASGI_APPLICATION = "app.asgi.application"
-
+os.environ.setdefault("DAPHNE_PORT", "8001")
 
 # settings to connect to Redis
 CHANNEL_LAYERS = {

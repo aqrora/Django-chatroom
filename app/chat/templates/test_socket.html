@@ -8,13 +8,31 @@
 </head>
 <body>
     <h1>Let's chat!</h1>
+    
+    <form type="text" id="form">
+        <input type="text" name="message">
+    </form>
     <script>
-        var endpoint = `ws://${window.location.host}/ws/socket-server`
-        var chatSocket = new WebSocket(endpoint)
+        const chatSocket = new WebSocket(
+                'ws://'
+                + "127.0.0.1:8001"
+                + '/ws/chat/'
+            );
         chatSocket.onmessage = function(e) {
             let data = JSON.parse(e.data)
             console.log("Data:", data)
         }
+        let form = document.getElementById('form');
+        form.addEventListener('submit', function(e) {
+            e.preventDefault()
+            let message = e.target.message.value
+            chatSocket.send(JSON.stringify({
+                'message':message,
+            }))
+            form.reset()
+        })
+
+
 
 </script>
 

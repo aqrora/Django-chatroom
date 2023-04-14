@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+
+<div id="app">
+  {% if not current_user %}
+    {% include 'popup.html' %}
+    <script>
+    // If user isn't logged in - the popup will be shown
+    showPopup();  
+    </script>
+  {% else %} 
+    <script>
+    // If user is logged in - the socket connection establishing and global variable (current_user_id) will be set
+    connectSocket();  
+    current_user_id = parseInt("{{ current_user.id }}");
+    </script>
+  {% endif %}
+  <div class="chat-header">
+    <h1>Chat Room</h1>
+  </div>
+  <div class="chat-box" id="chat-box">
+    <!-- Displays messages from context-->
+    {% for message in messages %} 
+    <div class="message">
+      {% ifchanged message.user %} <!-- Show's author only if it's the first message from the same author -->
+      <div class="message-row">  
+        <div class="message-author" data-user-id = "{{ message.user.id }}" style="color:{{ message.user.color }};">
+          {{ message.user.username }}:
+        </div>
+      </div>
+      {% endifchanged %}
+        <div class="message-row">
+          <div class="avatar-container">
+            {% if message.show_avatar %}
+            <div class="avatar" style="background-image: url('{{ message.user.avatar }}')"></div>
+            {% endif %}
+          </div>
+          <div class="message-text-container">
+            <div class="message-text {% if current_user == message.user %} active{% endif %}" data-message-id = "{{ message.id }}">
+              {{ message.text }}
+              
+              <span class="sent"> {% if message.edited %} Edited |{% endif %} {{ message.created_at }}</span>
+              {% if current_user == message.user %} <!-- If the user, that's on page have sent this specific sms - he can edit it-->
+              <span class="edit">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/></svg>
+              </span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    
+  </div>
+  <div class="chat-input">
+    <form method="POST" id="message-form"> <!-- Form that handles the message submission -->
+      {% csrf_token %}
+      <input class="input-form" type="text" name="message_text" autocomplete="off" maxlength="255" placeholder="Type your message here">
+      <button class="submit-message" type="submit">Send</button>
+    </form>
+  </div>
+  <script>
+    scrollToBottom();
+  </script>
+</div>
+  
+
+{% endblock %}

@@ -1,0 +1,27 @@
+version: "3"
+services:
+  
+  db:
+    env_file:
+      - .env
+    image: postgres
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+  app:
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    environment:
+      DB_HOST: db
+    depends_on:
+      - db
+    command: "python manage.py runserver 0.0.0.0:${APP_PORT} & daphne --port ${DAPHNE_PORT} app.asgi:application"
+ 

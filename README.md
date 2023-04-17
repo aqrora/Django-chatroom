@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Django-chatroom
 ___
 
@@ -24,3 +25,15 @@ ___
 - Users can react to messages with likes TODO 
 - Rate limiting is implemented to prevent spamming TODO
 >>>>>>> 090aff871ce41a98081ffc8fa49023aefbb4e6e3
+=======
+# Django-chatroom
+
+___
+
+## Simple, chat-room on Django, Jquery, and Websockets, with the following features:
+
+- Users can log in anonymously or by using username, login details are stored in JWT token
+- Messages are stored in a database, and displayed via websocket
+- Users can edit their own messages
+- Rate limiting is implemented to prevent spamming
+>>>>>>> origin/master

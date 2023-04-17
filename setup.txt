@@ -1,4 +1,8 @@
 cd app
 python3 manage.py migrate
+<<<<<<< HEAD
 screen daphne --port 8001 app.asgi:application
+=======
+daphne --port 8001 app.asgi:application
+>>>>>>> origin/master
 python3 manage.py runserver 

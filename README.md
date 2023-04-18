@@ -9,10 +9,12 @@ ___
 - Users can edit their own messages
 - Rate limiting is implemented to prevent spamming
 
-### Setup
+## Setup
 
 `pip install -r requirements.txt`
+
 `cd app`
+
 `python3 manage.py migrate`
 
 ### Start app (windows cmd)
